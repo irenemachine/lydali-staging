@@ -1,0 +1,26 @@
+<div class="sixteen columns">
+  <div class="section clearfix">
+    <h1>Page Not Found</h1>
+  </div>
+</div>
+
+<div class="sixteen columns align_right">
+  <div class="section clearfix">
+    <p class="quote">
+        We're sorry, but the page you're looking for could not be found.
+    </p>
+  </div>
+</div>
+
+<div class="section clearfix">  
+  <div class="eight columns align_right subtotal">
+    <p class="extra_padding">
+      <a href="#" onclick="window.history.back();return false;">Go back</a> or try searching.
+    </p>
+  </div>    
+  <div class="eight columns">
+    <form class="search" action="/search">
+      <input type="text" name="q" class="search_box" placeholder="Search..." value="{{ search.terms }}" x-webkit-speech />
+    </form>
+  </div>
+</div>

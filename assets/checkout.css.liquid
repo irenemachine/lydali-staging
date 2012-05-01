@@ -1,0 +1,128 @@
+@import url("{{ 'styles.css' | asset_url }}");
+
+/* #Checkout
+================================================== */
+
+#container, #header, #main, #footer {
+  width: 940px;
+}
+
+
+{% if settings.use_logo %}
+  #tagline {display:none;}
+  #logo {display:block; background:url('{{ 'logo.png' | asset_url }}') no-repeat center center; width: 100%; height: 175px;}
+{% else %}  
+  #tagline { padding-left: 0px; margin: 20px 0;}
+  .subtitle { display:block }
+{% endif %}
+
+#thumbs {
+  margin: 0;
+}
+
+#thumbs div {
+  border:none;
+}
+
+#thumbs td {
+  text-align: left;
+}
+
+#header {
+  background: none;
+}
+
+#main {
+  background: none;
+  border: solid 1px #d3d3d3;
+}
+
+#footer {
+  background: none;
+}
+#buttons {
+  background: none;
+}
+
+#overview, #container.slim #header {
+  background: none;
+  border-bottom: none;
+}
+
+#container.slim #main {
+  background: none;
+}
+
+#container.slim #footer {
+  background: none;
+}
+
+#overview .hint {
+  color: {{ settings.was_price_color }};
+}
+
+#products {
+  border-right: none;
+}
+
+h3.plisthead {
+  border-bottom: none;
+  line-height:20px;
+  text-transform: none;
+}
+
+#thumbs span, #thumbs h3.plisthead span {
+  color: {{ settings.regular_color}};
+}
+
+#cost {
+  color: {{ settings.regular_color}};
+}
+
+#addresses tr td input, #addresses tr td select {
+  margin-bottom: 0;
+}
+
+#addresses td {  
+  padding: 10px;
+}
+
+#addresses ul, #addresses ul li {
+  border:none;
+}
+
+#billing-is-shipping label {
+  display: inline;
+}
+
+#payment-methods, #payment-methods li {
+  border:none;
+}
+
+#payment-methods li label {
+  display: inline;
+}
+
+table tr td {
+  text-align:left;
+}
+
+.sst .gleft {
+  width: 35%;
+}
+
+#credit-card-info {
+  margin-left: 40%
+}
+
+.sst label {
+  display: inline;
+}
+
+#credit_card_month, #credit_card_year {
+  display:inline;
+}
+
+#wallet {
+  margin-left: 600px;
+}

@@ -1,0 +1,40 @@
+{%if settings.product_images_position == 'left' %}
+  <div class="{% if product.images.size > 1 %}eight{% else %}ten{% endif %} columns {%if settings.product_images_position == 'left' %}alpha{% else %}omega{% endif %} product_image_col" id="feature_image">
+    <a href="{{ product.featured_image | product_img_url: 'original' }}" data-rel="#featured_image"><img src="{{ product.featured_image | product_img_url: 'grande' }}" alt="{{ product.title | escape }}" itemprop="image" /></a>
+  </div>
+
+  {% if product.images.size > 1 %}
+    <div class="two columns product_image_col thumbnails {%if settings.product_images_position == 'right' %}omega{% endif %} ">
+      {% for image in product.images %}
+        <a href="{{ image | product_img_url: 'original' }}" data-rel="#{{ forloop.index }}"><img src="{{ image | product_img_url: 'grande' }}" alt="{{ product.title | escape }}" /></a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+{% else %}
+
+  {% if product.images.size > 1 %}
+   <div class="two columns product_image_col thumbnails ">
+      {% for image in product.images %}
+        <a href="{{ image | product_img_url: 'original' }}" data-rel="#{{ forloop.index }}"><img src="{{ image | product_img_url: 'grande' }}" alt="{{ product.title | escape }}" /></a>
+      {% endfor %}
+   </div>
+  {% endif %}
+
+  <div class="{% if product.images.size > 1 %}eight{% else %}ten{% endif %} columns omega product_image_col" id="feature_image">
+    <a href="{{ product.featured_image | product_img_url: 'original' }}" data-rel="#featured_image"><img src="{{ product.featured_image | product_img_url: 'grande' }}" alt="{{ product.title | escape }}" itemprop="image" /></a>
+  </div>
+  
+{% endif %}
+
+<div id="featured_image" class="modal modal_product">
+  <img src="{{ product.featured_image | product_img_url: 'original' }}" alt="{{ product.title | escape }}" />
+</div>
+
+{% for image in product.images %}
+  <div id="{{ forloop.index }}" class="modal modal_product">
+    <img src="{{ image | product_img_url: 'original' }}" alt="{{ product.title | escape }}" />
+  </div>
+{% endfor %}
+
+

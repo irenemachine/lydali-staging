@@ -1,0 +1,80 @@
+<div class="{% if products_per_row == "2" %}eight columns{% elsif products_per_row == "3" %}one-third column{% else %}four columns{% endif %} thumbnail">
+  <a href="{{ product.url | within: collection }}" title="{{ product.title | escape }}">
+    <img src="{{ product.featured_image | product_img_url: 'large' }}" alt="{{ product.title | escape }}" />
+    <div class="info">                                              
+      <span class="price">
+        {% if product.compare_at_price_max > product.price %}
+          <span class="was_price">{{ product.compare_at_price_max | money }}</span>
+        {% endif %}
+          
+        {% if product.available %}
+          {% if product.price_varies %}
+            {% if product.compare_at_price_max > product.price %}
+              <br />
+            {% endif %}
+            <small><em>from</em></small>
+          {% endif %}
+          {{ product.price_min | money }}
+        {% else %}
+          Sold Out
+        {% endif %}
+      </span>
+      <span class="title">{{ product.title }}</span>
+    </div>
+    {% if product.compare_at_price_max > product.price %}
+      <div class="sale">Sale</div>
+    {% endif %}
+  </a>
+
+  <div data-rel="#product-{{ product.id }}" class="quick_shop action_button">
+    {{ settings.quick_shop_text }}
+  </div>
+  
+  <div class="modal" id="product-{{ product.id }}">
+    <div class="nine columns alpha modal_image">
+      <img src="{{ product.featured_image | product_img_url: 'grande' }}" alt="{{ product.title | escape  }}" />
+    </div>
+    <div class="five columns">
+      <h3>{{ product.title }}</h3>
+
+      <p class="modal_price">
+        <span class="was_price">
+           {% if product.price < product.compare_at_price_max %}
+             {{ product.compare_at_price | money }}
+           {% endif %}
+         </span>
+        
+        {% if product.available %}
+          <span class="current_price">
+            {{ product.price | money }}
+          </span>
+        {% else %}
+          Sold Out
+        {% endif %}
+      </p>
+
+
+      {% if settings.product_description_position == "top" %}
+        <p>
+          {{ product.description | strip_html | truncatewords: settings.description_words }}
+        </p>
+        <p>
+          <a href="{{ product.url | within: collection }}" class="view_product_info" title="View {{ product.title | escape }} Details">View full product details &rarr;</a>
+        </p>
+      {% endif %}
+    
+    
+      {% include 'product-form' %}
+
+      {% if settings.product_description_position == "bottom" %}
+        <p>
+          {{ product.description | strip_html | truncatewords: settings.description_words }}
+        </p>
+        <p>
+          <a href="{{ product.url | within: collection }}" class="view_product_info" title="View {{ product.title | escape }} Details">View full product details &rarr;</a>
+        </p>
+      {% endif %}
+      
+    </div>
+	</div>
+</div>

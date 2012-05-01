@@ -1,0 +1,162 @@
+<div class="sixteen columns">
+  <div class="clearfix breadcrumb product_breadcrumb">
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ shop.url }}" title="{{ shop.name | escape }}" itemprop="url"><span itemprop="title">Home</span></a></span> 
+    &#62;
+    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      {% if collection %}
+        <a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title }}</a>
+      {% else %}
+        <a href="/collections/all" title="All Products">Products</a>
+      {% endif %}
+    </span>
+    &#62;
+    {{ product.title }}
+  </div>
+</div>
+
+<div class="sixteen columns" itemscope itemtype="http://data-vocabulary.org/Product" id="product-{{ product.id }}">
+	<div class="section product_section clearfix">
+	  
+  	 {% if settings.product_images_position == 'left' %}             
+       {% assign products_per_row = settings.products_per_row %}
+       {% include 'product-images' %}
+     {% endif %}
+
+     <div class="six columns {%if settings.product_images_position == 'left' %}omega{% else %}alpha{% endif %}">
+       <h1 class="product_name" itemprop="name">{{ product.title }}</h1>
+
+       <p class="modal_price" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+         <meta itemprop="currency" content="{{ shop.currency }}" />
+         <meta itemprop="seller" content="{{ shop.name | escape }}" />
+         <meta itemprop="availability" content="{% if product.available %}in_stock{% else %}out_of_stock{% endif %}" />
+         
+         <span class="was_price">
+            {% if product.price < product.compare_at_price_max %}
+              {{ product.compare_at_price | money }}
+            {% endif %}
+          </span>
+         
+         {% if product.available %}
+           <span itemprop="price" content="{{ product.price | money_without_currency }}" class="current_price">
+             {{ product.price | money }}
+           </span>
+         {% else %}
+           Sold Out
+         {% endif %}
+       </p>
+     
+       {% if settings.product_description_position == "top" %}
+         <div class="description" itemprop="description">
+           {{ product.description }}
+         </div>
+       {% endif %}
+     
+     
+       {% include 'product-form' %}
+
+       {% if settings.product_description_position == "bottom" %}
+         <div class="description" itemprop="description">
+           {{ product.description }}
+         </div>
+       {% endif %}
+
+
+       <hr />
+     
+       <div class="meta">
+      
+         {% if settings.display_collections %}
+           <p>
+             <span class="label">Collections:</span> 
+             <span>
+              {% for col in  product.collections %}
+                <a href="{{ col.url }}" title="{{ col.title }}">{{ col.title }}</a>{% unless forloop.last %},{% endunless %} 
+              {% endfor %}
+            </span>
+          </p>
+         {% endif %}
+       
+         {% if settings.display_tags %}
+            <p>
+              {% for tag in product.tags %}
+                {% if forloop.first %}
+                  <span class="label">Tags:</span> 
+                {% endif %}
+
+                <span>
+                    <a href="/collections/{% if collection %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handle }}" title="Products tagged {{ tag | escape}}">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
+                </span>
+              {% endfor %}
+            </p>
+         {% endif %}
+       
+         <p>
+           <span class="label">Type:</span> <span itemprop="category">{{ product.type | link_to_type }}</span>
+         </p>
+       
+         <p>
+           <span class="label">Vendor:</span> <span itemprop="brand">{{ product.vendor | link_to_vendor }}</span>
+         </p>
+       
+       </div>
+       
+       {% include "social-buttons" %}
+       
+       
+       {% if collection %}            
+          <hr />
+          <div class="meta">
+            {% if collection.next_product %}
+              {% for p in collection.products %}
+                {% capture product_url %}{{ p.url | within: collection }}{% endcapture %}
+                {% if product_url == collection.next_product %}
+                  <p class="right">
+                    <a href="{{ product_url }}" title="{{ p.title | escape }}">{{ p.title }}</a> &rarr;
+                  </p>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+        
+            {% if collection.previous_product %}
+              {% for p in collection.products %}
+                {% capture product_url %}{{ p.url | within: collection }}{% endcapture %}
+                {% if product_url == collection.previous_product %}
+                  <p class="left">
+                    &larr; <a href="{{ product_url }}" title="{{ p.title | escape }}">{{ p.title }}</a>
+                  </p>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+       {% endif %}
+       
+    </div>
+    
+    {% if settings.product_images_position == 'right' %}             
+      {% assign products_per_row = settings.products_per_row %}
+      {% include 'product-images' %}
+    {% endif %}
+    
+  </div>
+   
+</div>
+
+{% if collection %}
+  {% assign col = collection.handle %}
+{% else %}  
+  {% assign col = product.collections.first.handle %}
+{% endif %}
+
+{% if col %}
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      <h2>Related Items</h2>
+    </div>
+  </div>
+
+  {% capture limit %}{{ settings.products_per_row | plus: 1 }}{% endcapture %}
+  {% assign skip_product = product %}
+  {% assign products = collections[col].products %}
+  {% assign products_per_row = settings.products_per_row %}
+  {% include 'product-loop' %}
+{% endif %}

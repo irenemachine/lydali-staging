@@ -1,0 +1,127 @@
+{% assign blog_pagination = 5 %}
+
+<div class="sixteen columns">
+  <div class="section clearfix">
+    <div class="title"><a href="{{ blog.url }}" title="{{ blog.title | escape }}">{{ blog.title }}</a></div>
+      
+      <div class="breadcrumb sixteen columns alpha omega">
+        <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ shop.url }}" title="{{ shop.name | escape }}" itemprop="url"><span itemprop="title">Home</span></a></span> 
+        &#62;
+        <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ blog.url }}" title="{{ blog.title | escape }}" itemprop="url"><span itemprop="title">{{ blog.title }}</span></a></span>       
+        &#62;
+        <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">{{ article.title }}</span>       
+      </div>
+  </div>
+</div>
+
+<div class="ten columns">
+  <div class="clearfix article no_border">
+    <h1 class="blog_title">{{ article.title }}</h1>
+    
+    <p class="meta">
+      <span class="label">Posted on</span> 
+      {{ article.published_at | date: "%B %d, %Y" }}
+      <span class="label">by</span> 
+      {{ article.author }}
+
+      {% if article.comments_enabled? %}
+       | <a href="{{ article.url }}#comments" title="{{ article.title | escape }} Comments">{{ article.comments_count }} {{ article.comments_count | pluralize: 'Comment', 'Comments' }} </a>
+      {% endif %}
+    </p>
+  
+    {{ article.content }} 
+
+    {% include "social-buttons" with "article" %}
+    
+    <p class="meta">
+      {% if article.tags %}
+        <span class="label">Posted in</span>
+        {% for tag in article.tags %}
+          <a href="{{ shop.url}}/blogs/{{ blog.handle }}/tagged/{{ tag | handleize }}" title="{{ blog.title }} tagged {{ tag | escape }}">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      {% endif %}
+    </p>
+    
+    <hr />
+    
+    {% if blog.next_article %}
+      <p class="right">
+        {% for post in blog.articles %}
+          {% if post.url == blog.next_article %}
+            <a href="{{ post.url }}" title="{{ post.title | escape }}">{{ post.title }}</a> &rarr;
+          {% endif %}
+        {% endfor %}
+      </p>
+    {% endif %}
+
+    {% if blog.previous_article %}
+      <p class="left">
+        {% for post in blog.articles %}
+          {% if post.url == blog.previous_article %}
+            &larr; <a href="{{ post.url }}" title="{{ post.title | escape }}">{{ post.title }}</a>
+          {% endif %}
+        {% endfor %}
+      </p>
+    {% endif %}
+              
+    <div class="clear" id="comments"></div>
+
+    
+    {% if blog.comments_enabled? %}
+      {% if article.comments_count > 0 %}
+        <h4>{{ article.comments.size }} {{ article.comments.size | pluralize: 'Response', 'Responses' }}</h4> 
+    
+        {% for comment in article.comments %}
+          <div id="comment-{{ comment.id }}" class="comment clearfix">
+            <div class="gravatar two columns alpha omega" data-email="{{ comment.email }}">
+              <img src="//1.gravatar.com/avatar/{{ comment.email | md5 }}?s=80&r=G&d={{ "avatar.png" | asset_url }}" alt="{{ comment.author }}" />
+            </div>
+            <div class="comment-body eight columns omega">
+              <h5>{{ comment.author }}</h5>
+              <p class="meta">
+                <span class="label">{{ comment.created_at | date: "%B %d, %Y" }}</span>
+              </p>
+
+              {{ comment.content }}
+
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <h4>Leave a Reply</h4>
+    
+      {% form article %}
+        {% if form.posted_successfully? %}
+          {% if blog.moderated? %}
+            <p class="quote align_left">Successfully posted your comment. It will have to be approved by the blog owner before showing up.</p>
+          {% else %}
+            <p class="quote align_left">Successfully posted your comment.</p>
+          {% endif %}
+        {% endif %}
+
+        {% if form.errors %}
+          <p class="quote align_left">Not all the fields have been filled out correctly</p>
+        {% endif %}
+
+        <label for="comment_author">Name <span class="red">*</span></label>
+        <input type="text" id="comment_author" name="comment[author]" value="{{ form.author }}" />
+
+        <label for="comment_email">Email <span class="red">*</span></label>      
+        <input type="text" id="comment_email" name="comment[email]" value="{{ form.email }}" />
+
+        <label for="comment_email">Comment</label>      
+        <textarea id="comment_body" name="comment[body]" rows="5">{{ form.body }}</textarea>
+
+        {% if blog.moderated? %}
+          <p><em>Comments have to be approved before showing up.</em></p>
+        {% endif %}
+      
+        <input type="submit" value="Reply" id="comment-submit" class="action_button" />
+      {% endform %}
+    {% endif %}
+    
+  </div>
+</div>
+
+{% include "blog-sidebar" %}

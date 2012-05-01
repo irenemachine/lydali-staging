@@ -1,0 +1,177 @@
+<form action="/cart" method="post" id="cart_form">
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      <h1>Shopping Cart</h1>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+  // <![CDATA[  
+  $(function() {
+      var prices = [];
+      var clean_price = function(price) {
+          price = "" + price;
+          return "$" + price.substring(0, price.length - 2) + "." + price.substring(price.length - 2)
+      }
+      {% for item in cart.items %}
+        var item = {price:{{item.price}}, quantity:{{item.quantity}}};
+        prices["item_" + {{item.variant.id}}] = item;
+        prices.push(item);
+      {% endfor %}
+      var updatePrice = function(c) {
+        var id = jQuery(this).attr('id');
+        var quantity = Number(jQuery(this).val());
+        var item_id = id.replace('updates', 'item');
+        prices[item_id].quantity = quantity;
+        var price = prices[item_id].price;
+        jQuery('#' + id.replace('updates', 'price_total')).html(clean_price(quantity * price));
+        
+        var total_price = prices.reduce(function(a, b) {
+            return a + b.price * b.quantity;
+        }, 0)
+        jQuery('#cart_total_price').html(clean_price(total_price) + " USD")
+      }
+      jQuery('.quantity').change(updatePrice).click(updatePrice)
+  });
+  // ]]>
+</script>
+
+  {% if cart.item_count == 0 %}
+    <div class="sixteen columns">
+      <div class="section clearfix">
+        <p class="quote">There are no items in your cart. <a href="/collections/all">Continue Shopping &rarr;</a></p>    
+      </div>
+    </div>
+  {% else %}
+    
+    <div class="sixteen columns mobile_only">
+      <div class="right align_right">
+        <p>
+          <input type="submit" class="action_button" id="checkout" name="checkout" value="Checkout" />
+        </p>
+        
+        {% if additional_checkout_buttons %}
+          <p>
+            {{ content_for_additional_checkout_buttons }}
+          </p>
+        {% endif %}
+      </div>
+
+      <p class="left">
+        {{ cart.item_count }} {{ cart.item_count | pluralize: 'Item', 'Items' }} — <strong>{{ cart.total_price | money_with_currency }}</strong>
+        <br /><small><em>Excluding tax &amp; shipping</em></small>
+      </p>
+    </div>
+    
+    
+    <div class="checkout_table_header">    
+      <div class="ten columns">      
+        <h4>Item</h4>
+      </div>
+          
+      <div class="two columns">
+        <h4>Price</h4>
+      </div>    
+    
+      <div class="one column">
+        <h4>Qty</h4>
+      </div>
+    
+      <div class="three columns">
+        <h4>Total</h4>
+      </div>
+    
+      <div class="clear"></div>
+    </div>
+    
+    {% for item in cart.items %}
+      <div class="four columns product_row">
+         <a href="{{ item.product.url }}" title="{{ item.product.title | escape }}">
+           <img src="{{ item.product.featured_image | product_img_url: 'large' }}"  alt="{{ item.product.title | escape }}" />
+         </a>
+      </div> 
+    
+      <div class="six columns title_column">
+        <p class="cart_price">
+          {{ item.price | money }}
+        </p>
+        <p>
+          <a href="{{item.product.url }}" title="{{ item.title | escape }}">{{ item.title }}</a>
+        </p> 
+              
+      </div>
+    
+      <div class="two columns">
+        <p class="price_total">
+          {{ item.price | money }}
+        </p>
+      </div>
+
+      <div class="one column mobile_right">
+        <input type="number" size="2" class="quantity" name="updates[{{item.variant.id}}]" id="updates_{{item.variant.id}}" value="{{ item.quantity }}" />
+      </div>
+      
+      <div class="two columns mobile_right">
+        <span class="price_total" id="price_total_{{item.variant.id}}">{{ item.line_price | money }}</span>
+        
+        <p class="update_or_remove">
+          <a href="#" class="remove" data-product-id="{{ item.variant.id }}">Remove</a>
+          <em>or</em>
+          <a href="#" class="update_subtotal">Update</a> 
+        </p>
+      </div>
+      
+      <div class="one column remove_column">
+        <button class="remove" title="Remove Item" data-product-id="{{ item.variant.id }}">x</button>
+      </div>
+    
+      <div class="clear"></div>
+      <div class="sixteen columns">
+        <hr />
+      </div>
+         
+    {% endfor %}
+    
+    <div class="thirteen columns align_right">
+      <h4 class="subtotal">
+        Subtotal
+      </h4>
+    </div>
+
+    <div class="three columns">
+      <p>
+        <strong id='cart_total_price'>{{ cart.total_price | money_with_currency }}</strong> <br /><small><em>Excluding tax &amp; shipping</em></small>
+      </p>
+    </div>
+
+    {% if settings.display_special_instructions %} 
+      <div class="four columns mobile_left">
+        <label for="note">Special Instructions:</label>
+      </div>
+    
+      <div class="six columns">
+        <textarea id="note" name="note" rows="2">{{ cart.note }}</textarea>        
+      </div>  
+    {% endif %}
+    
+    <div class="three columns update_subtotal_text align_right {% unless settings.display_special_instructions %}offset-by-ten{% endunless %}">
+      <p>
+        <a href="#" class="update_subtotal">Update Subtotal</a>
+      </p>
+    </div>
+
+    <div class="three columns">
+      <p>
+        <input type="submit" class="action_button" id="checkout" name="checkout" value="Checkout" />
+      </p>
+      
+      {% if additional_checkout_buttons %}
+        <p>
+          {{ content_for_additional_checkout_buttons }}
+        </p>
+      {% endif %}
+
+    </div>
+  {% endif %}
+  
+</form>

@@ -1,0 +1,51 @@
+{% capture new_row %}
+    </div>
+  </div>
+  <div class="section">
+    <div class="product_row">
+{% endcapture %}
+
+
+<div class="sixteen columns">
+	<div class="section clearfix">
+    <h1>Product Collections</h1>
+    
+    <div class="breadcrumb sixteen columns alpha omega">
+      <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ shop.url }}" title="{{ shop.name | escape }}" itemprop="url"><span itemprop="title">Home</span></a></span> 
+      &#62;
+      <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">Product Collections</span>       
+    </div>
+  </div>
+</div>
+
+  {% for collection in collections %}
+  
+    {% if forloop.first %}
+      <div class="section">
+        <div class="product_row">
+    {% endif %}
+
+    {% unless collection.handle == 'frontpage' %}
+
+      {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+      <div class="one-third column thumbnail">
+        <a href="{{ collection.url }}" title="Browse {{ collection_title }}">
+          {{ collection.products.first.featured_image | product_img_url: 'large' | img_tag: collection_title }}
+          <div class="info">                                              
+            <span class="price">
+              {{ collection.all_products_count }} {{ collection.all_products_count | pluralize: 'item', 'items' }}
+            </span>
+            <span class="title">{{ collection.title }}</span>
+          </div>
+        </a>
+      </div>
+    
+      {% cycle '', '', new_row %}
+    {% endunless %}
+    
+    {% if forloop.last %}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+  

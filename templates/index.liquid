@@ -1,0 +1,77 @@
+{% if settings.slideshow_enabled %}
+
+  <div class="sixteen columns">
+    <div class="section">
+      <div class="flexslider">
+  	    <ul class="slides">
+  	      {% if settings.slideshow_1_enabled %}
+    	    	<li>
+    	    		<a href="{{ settings.image_1_link }}"><img src="{{ 'slideshow_1.jpg' | asset_url }}" /></a>
+    	    		{% if settings.image_1_caption != blank %}
+    	    		  <p class="flex-caption">{{ settings.image_1_caption }}</p>
+    	    		{% endif %}
+    	    	</li>
+    	    {% endif %}
+          {% if settings.slideshow_2_enabled %}
+          	<li>
+          		<a href="{{ settings.image_2_link }}"><img src="{{ 'slideshow_2.jpg' | asset_url }}" /></a>
+          		{% if settings.image_2_caption != blank %}
+          		  <p class="flex-caption">{{ settings.image_2_caption }}</p>
+          		{% endif %}
+          	</li>
+          {% endif %}
+          {% if settings.slideshow_3_enabled %}
+          	<li>
+          		<a href="{{ settings.image_3_link }}"><img src="{{ 'slideshow_3.jpg' | asset_url }}" /></a>
+          		{% if settings.image_3_caption != blank %}
+          		  <p class="flex-caption">{{ settings.image_3_caption }}</p>
+          		{% endif %}
+          	</li>
+          {% endif %}
+          {% if settings.slideshow_4_enabled %}
+          	<li>
+          		<a href="{{ settings.image_4_link }}"><img src="{{ 'slideshow_4.jpg' | asset_url }}" /></a>
+          		{% if settings.image_4_caption != blank %}
+          		  <p class="flex-caption">{{ settings.image_4_caption }}</p>
+          		{% endif %}
+          	</li>
+          {% endif %}
+          {% if settings.slideshow_5_enabled %}
+          	<li>
+          		<a href="{{ settings.image_5_link }}"><img src="{{ 'slideshow_5.jpg' | asset_url }}" /></a>
+          		{% if settings.image_5_caption != blank %}
+          		  <p class="flex-caption">{{ settings.image_5_caption }}</p>
+          		{% endif %}
+          	</li>
+          {% endif %}
+  	    </ul>
+    	</div>
+    </div>
+  </div>
+
+{% endif %}
+
+
+{% if settings.homepage != blank %}
+  <div class="sixteen columns">
+  	<div class="section">
+      <h1 {% if settings.slideshow_enabled %}class="home"{% endif %}>{{ pages[settings.homepage].title }}</h1>
+    </div>
+  </div>
+{% endif %}
+
+
+{% if settings.frontpage_collection %}
+  {% assign products = collections[settings.frontpage_collection].products %}
+  {% assign products_per_row = settings.frontpage_products_per_row %}
+  {% include 'product-loop' %}
+{% endif %}
+
+
+{% if settings.homepage != blank %}
+  <div class="sixteen columns">
+  	<div class="section clearfix">
+      {{ pages[settings.homepage].content }}
+  	</div>
+  </div>
+{% endif %}

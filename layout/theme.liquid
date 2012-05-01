@@ -1,0 +1,273 @@
+<!doctype html>
+<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+    <meta http-equiv="cleartype" content="on">
+  
+    <title>{{ page_title | escape }}{% if current_page != 1 %} Page {{ current_page }}{% endif %} | {{ shop.name }}</title>
+    
+    {% if template contains "product" %}
+      <meta property="og:title" content="{{ product.title }}" />
+      <meta property="og:type" content="product" />
+      <meta property="og:url" content="{{ shop.url }}{{ product.url }}" />
+      <meta property="og:image" content="{{ product.featured_image | product_img_url: 'grande' }}" />
+      <meta property="og:site_name" content="{{ shop.name }}" />
+    {% endif %}
+    
+    {% if shop.description != blank and template contains "index" %}
+      <meta name="description" content="{{ shop.description }}">
+    {% endif %}
+		
+		{% if settings.author != blank %}
+		  <meta name="author" content="{{ settings.author }}">
+		{% endif %}
+		
+		<meta name="robots" content="index,follow"/>
+		
+		<!-- Mobile Specific Metas -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
+
+		<!-- Stylesheets -->
+    {{ 'styles.css' | asset_url | stylesheet_tag }}
+    {{ 'layout.css' | asset_url | stylesheet_tag }}
+
+		<!-- Icons -->
+		<link rel="shortcut icon" type="image/x-icon" href="{{ 'favicon.png' | asset_url }}">
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ 'apple_touch_57.png' | asset_url }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ 'apple_touch_72.png' | asset_url }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ 'apple_touch_114.png' | asset_url }}">
+
+    {% if template contains 'product' %}
+      {% if collection %}
+        <link rel="canonical" href="{{ shop.url }}{{ product.url }}" />
+      {% endif %}
+    {% endif %}
+
+    <!-- Custom Fonts -->
+    {% if settings.logo_typeface_method == "google_webfonts" %}
+      <link href='http://fonts.googleapis.com/css?family={{ settings.logo_google_webfont_font }}:light,normal,bold' rel='stylesheet' type='text/css'>
+    {% endif %}
+    {% if settings.headline_typeface_method == "google_webfonts" %}
+      <link href='http://fonts.googleapis.com/css?family={{ settings.headline_google_webfont_font }}:light,normal,bold' rel='stylesheet' type='text/css'>
+    {% endif %}
+    {% if settings.top_bar_typeface_method == "google_webfonts" %}
+      <link href='http://fonts.googleapis.com/css?family={{ settings.top_bar_google_webfont_font }}:light,normal,bold' rel='stylesheet' type='text/css'>
+    {% endif %}
+    {% if settings.nav_typeface_method == "google_webfonts" %}
+      <link href='http://fonts.googleapis.com/css?family={{ settings.nav_google_webfont_font }}:light,normal,bold' rel='stylesheet' type='text/css'>
+    {% endif %}
+    {% if settings.regular_typeface_method == "google_webfonts" %}
+      <link href='http://fonts.googleapis.com/css?family={{ settings.regular_google_webfont_font }}:light,normal,bold' rel='stylesheet' type='text/css'>
+    {% endif %}
+    
+		<!-- HTML5 Shiv -->
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>				
+
+    {% if template contains 'customer' %}
+      {{ "shopify_common.js" | shopify_asset_url | script_tag }}
+      {{ "customer_area.js"  | shopify_asset_url | script_tag }}
+      <!--[if lt IE 7]>
+        {{ 'json2.js' | shopify_asset_url | script_tag }}
+      <![endif]-->
+    {% endif %}
+    
+    {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+    
+    <!-- jQuery and jQuery fallback -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+		<script>window.jQuery || document.write("<script src='{{ jquery-1.7.min.js | asset_url }}'>\x3C/script>")</script>
+		{{ 'app.js' | asset_url | script_tag }}
+		
+    {{ content_for_header }}
+	</head>
+
+  <body>
+  
+    <div class="top_bar">
+      <div class="container">
+        {% if settings.search_box_top_bar %}
+          <div class="eight columns top_bar_search">          
+            <form class="search" action="/search">
+              
+            </form>
+          </div>
+        {% endif %}        
+        
+        <div class="eight columns {% unless settings.search_box_top_bar %} offset-by-eight {% endunless %}">
+          <ul>
+            <li>
+              {% if cart.item_count == 0 %}
+                <a href="/cart" title="Checkout">Checkout</a>
+              {% else %}
+                <a href="/checkout" title="Checkout">Checkout</a>
+              {% endif %}
+            </li>
+            <li>
+              <a href="/cart" class="cart" title="Shopping Cart">Cart ({{ cart.item_count }})</a>
+            </li>
+            {% if shop.customer_accounts_enabled %}
+              <li>
+                <a href="/account" title="My Account">My Account</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>  
+    </div>
+  
+  	<div class="container content">	
+			<div class="sixteen columns logo">
+        			<a href="/">
+            {% if settings.use_logo %}
+              <img src="{{ 'logotrimmed.png' | asset_url }}" alt="{{ shop.name }}" />
+            {% else %}
+              {{ shop.name }}
+            {% endif %}
+					</a>
+			</div>
+			<div class="sixteen columns clearfix">
+				<div id="nav">
+					<ul id="menu">
+            {% for link in linklists[settings.main_linklist].links %}
+              {% if linklists[link.handle] == empty %}
+                <li><a href="{{ link.url }}" title="{{ link.title }}" {% if link.active %}class="active"{% endif %}>{{ link.title }}</a></li>
+
+
+              {% else %}
+                <li><a href="{{ link.url }}" title="{{ link.title }}" {% if link.active %}class="active"{% endif %} {% for link in linklists[link.handle].links %}{% if link.active %}class="active"{% endif %}{% endfor %}>{{ link.title }} 
+                  <span class="arrow">&or;</span></a> 
+                  <ul>
+                    {% for link in linklists[link.handle].links %}
+                      {% if linklists[link.handle] == empty %}
+                        <li><a href="{{ link.url }}" title="{{ link.title }}">title</a></li>
+                      {% else %}
+                      <li><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }} <span class="arrow"> &rang;</span></a> 
+                        <ul>
+                          {% for link in linklists[link.handle].links %}                        
+                            <li><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+					</ul>
+				</div>
+			</div>
+			
+      {% if template contains 'list-collections' %}
+        {% include 'collection-listing' %}
+      {% else %}
+        {{ content_for_layout }}
+      {% endif %}
+			
+		</div> <!-- end container -->
+
+
+    <div class="footer">
+      <div class="container">
+    		<div class="sixteen columns">
+
+          <div class="four columns alpha">
+            <h6>Search</h6>
+
+            <form class="search" action="/search">
+              <input type="text" name="q" class="search_box" placeholder="Search..." value="{{ search.terms }}" x-webkit-speech />
+            </form>
+
+            {% if settings.enable_social_links %}
+
+              <h6 class="social">Social</h6>
+
+              {% if settings.twitter_link != '' %}
+        				<a href="{{ settings.twitter_link }}" title="{{ shop.name }} on Twitter" rel="me">
+        				  <img src="{{ "twitter.png" | asset_url }}" alt="Twitter" />
+        				</a>              
+              {% endif %}
+              
+              {% if settings.facebook_link != '' %}
+        				<a href="{{ settings.facebook_link }}" title="{{ shop.name }} on Facebook" rel="me">
+        				  <img src="{{ "facebook.png" | asset_url }}" alt="Facebook" />
+        				</a>              
+              {% endif %}
+              
+              {% if settings.youtube_link != '' %}
+        				<a href="{{ settings.youtube_link }}" title="{{ shop.name }} on YouTube" rel="me">
+        				  <img src="{{ "youtube.png" | asset_url }}" alt="Facebook" />
+        				</a>              
+              {% endif %}
+              
+              {% if settings.linkedin_link != '' %}
+        				<a href="{{ settings.linkedin_link }}" title="{{ shop.name }} on LinkedIn" rel="me">
+        				  <img src="{{ "linkedin.png" | asset_url }}" alt="LinkedIn" />
+        				</a>              
+              {% endif %}
+              
+              {% if settings.flickr_link != '' %}
+        				<a href="{{ settings.flickr_link }}" title="{{ shop.name }} on Flickr" rel="me">
+        				  <img src="{{ "flickr.png" | asset_url }}" alt="Flickr" />
+        				</a>              
+              {% endif %}
+              
+            {% endif %}
+          </div>
+
+
+          <div class="four columns">
+            <h6>{{ linklists.footer.title }}</h6>
+            <ul>
+              {% for link in linklists.footer.links %}
+                <li><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+
+
+          <div class="eight columns omega">
+
+            {% if settings.newsletter_enabled %}
+              <h6>Newsletter</h6>
+            
+              {% form 'customer' %}
+                {% if form.posted_successfully? %}
+                  <p><em>Thank you for joining our mailing list!</em></p>
+                {% elsif form.errors %}
+                  {% for field in form.errors %}
+                    <p><em>{{ field }} - {{ form.errors.messages[field] }}</em></p>
+                  {% endfor %}
+                {% endif %}
+                        
+                <input type="hidden" id="contact_tags" name="contact[tags]" value="prospect,newsletter"/>
+                <input type="email" id="contact_email" name="contact[email]" required pattern="[^ @]*@[^ @]*" placeholder="Email address" />
+                <input type='submit' class="submit" value="Sign Up" />
+              {% endform %}
+            {% endif %}
+
+            {% if settings.footer_content_page != blank %}
+    			    <h6>{{ pages[settings.footer_content_page].title }}</h6>
+
+              {{ pages[settings.footer_content_page].content }}
+
+            {% endif %}
+
+            <p id="powered_by_link">
+              {{ powered_by_link | replace: "shopify.com", "shopify.com/?ref=out-of-the-sandbox" }}
+            </p>
+          </div>
+		    </div>
+      </div>
+    </div> <!-- end footer -->
+
+    {% if settings.display_social_buttons or settings.display_social_buttons_blog %}
+      <script type="text/javascript" src="//apis.google.com/js/plusone.js"></script>        
+    {% endif %}
+
+  </body>
+</html>

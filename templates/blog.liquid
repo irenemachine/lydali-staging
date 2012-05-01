@@ -1,0 +1,60 @@
+{% paginate blog.articles by 5 %}
+
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      <h1><a href="{{ blog.url }}" title="{{ blog.title | escape }}">{{ blog.title }}</a></h1>
+      
+        <div class="breadcrumb sixteen columns alpha omega">
+          <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ shop.url }}" title="{{ shop.name | escape }}" itemprop="url"><span itemprop="title">Home</span></a></span> 
+          &#62;
+          <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ blog.url }}" title="{{ blog.title | escape }}" itemprop="url"><span itemprop="title">{{ blog.title }}</span></a></span>       
+
+          {% if current_tags %}
+            {% for tag in current_tags %}
+              &#62;
+            
+              <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ shop.url}}/blogs/{{ blog.handle }}/tagged/{{ tag | handleize }}" title="{{ blog.title }} tagged {{ tag | escape }}" itemprop="url"><span itemprop="title">{{ tag }}</span></a></span>       
+            {% endfor %}
+          {% endif %}
+
+          &#62; Page {{ paginate.current_page }} of {{ paginate.pages }}
+        </div>
+    </div>
+  </div>
+
+  <div class="ten columns">
+    {% for article in blog.articles %}
+      <div class="clearfix article">
+        <h3><a href="{{ article.url }}" title="{{ article.title | escape }}">{{ article.title }}</a></h3>
+      
+        <p class="meta">
+         <span class="label">Posted on</span> 
+         {{ article.published_at | date: "%B %d, %Y" }}
+         <span class="label">by</span> 
+         {{ article.author }}
+         
+         {% if article.comments_enabled? %}
+          | <a href="{{ article.url }}#comments" title="{{ article.title | escape }} Comments">{{ article.comments_count }} {{ article.comments_count | pluralize: 'Comment', 'Comments' }} </a>
+         {% endif %}
+        </p>
+    
+        {% if article.excerpt != blank %}
+          {{ article.excerpt }}
+        
+          <p class="continue_reading">
+            <a href="{{ article.url }}" title="{{ article.title | escape }}">Continue Reading &rarr;</a>
+          </p>
+        {% else %}
+          {{ article.content }} 
+        {% endif %}
+      </div>
+    {% endfor %}
+  
+    {% include 'pagination' %}    
+  </div>
+
+  {% include "blog-sidebar" %}
+
+{% endpaginate %}
+
+

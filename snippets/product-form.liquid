@@ -1,0 +1,78 @@
+{% assign product_selected = false %}
+
+<form action="/cart/add" method="post" class="clearfix">
+  {% if product.options.size > 1 %}
+    <div class="select">
+      <select id="product-select-{{ product.id }}" name='id'>
+        {% for variant in product.variants %}
+          <option value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  {% elsif product.options.size == 1 and product.variants.size > 1 %}
+    <div class="select">
+      <label>{{ product.options[0] }}</label>
+      <select id="product-select-{{ product.id }}" name='id'>
+        {% for variant in product.variants %}
+          <option value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  {% else %}
+    <div style="display:none;">
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+      <input type="radio" name="{{ product.handle }}" value="{{ product.variants.first.title }}" checked="checked" /> {{ product.variants.first.title }}
+    </div>
+  {% endif %}
+ 
+ 
+  {% if product.available %}
+    <div class="purchase clearfix">
+      <input type="submit" name="add" value="Add to Cart" id="add-to-cart" class="action_button" />
+    </div>
+  {% endif %}
+</form>
+
+<script type="text/javascript">
+  // <![CDATA[  
+  $(function() {
+  
+    var selectCallback = function(variant, selector) {
+      $product = $('#product-' + selector.product.id);
+
+      if (variant && variant.available == true) {
+        if(variant.price < variant.compare_at_price){
+          $('.was_price', $product).html(Shopify.formatMoney(variant.compare_at_price, "{{ shop.money_format }}"))        
+        } else {
+          $('.was_price', $product).text('')
+        } 
+        $('.current_price', $product).html(Shopify.formatMoney(variant.price, "{{ shop.money_format }}"))
+        $('#add-to-cart', $product).removeClass('disabled').removeAttr('disabled').val('Add to Cart');
+      } else {
+        var message = variant ? "Sold Out" : "Unavailable";    
+        $('.was_price', $product).text('')
+        $('.current_price', $product).text(message);
+        $('#add-to-cart', $product).addClass('disabled').attr('disabled', 'disabled').val(message); 
+      }
+    };
+  
+    {% if product.variants.size > 1 or product.options.size > 1 %}
+      $product = $('#product-' + {{ product.id }});
+      new Shopify.OptionSelectors("product-select-{{ product.id }}", { product: {{ product | json }}, onVariantSelected: selectCallback });
+
+      {% if product.available %}
+      {% assign found_one_in_stock = false %}
+      {% for variant in product.variants %}
+        {% if variant.available and found_one_in_stock == false %}
+          {% assign found_one_in_stock = true %}
+          {% for option in product.options %}
+            $('.single-option-selector:eq(' + {{ forloop.index0 }} + ')', $product).val({{ variant.options[forloop.index0] | json }}).trigger('change');
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      {% endif %}
+
+    {% endif %}
+  });
+  // ]]>
+</script>

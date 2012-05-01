@@ -1,0 +1,85 @@
+{% paginate collection.products by settings.pagination_limit %}
+
+  <div class="sixteen columns">
+  	<div class="section clearfix">    
+    
+
+      <div class="breadcrumb eight columns alpha">
+        <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ shop.url }}" title="{{ shop.name | escape }}" itemprop="url"><span itemprop="title">Home</span></a></span> 
+        &#62;
+        <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="{{ collection.url }}" title="{{ collection.title | escape }}" itemprop="url"><span itemprop="title">{{ collection.title }}</span></a></span>       
+      
+        {% if current_tags %}
+          {% for tag in current_tags %}
+            &#62;
+            <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/collections/{% if collection.handle != blank %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handleize }}" title="{{ tag | escape }}" itemprop="url"><span itemprop="title">{{ tag }}</span></a></span>       
+          {% endfor %}
+        {% endif %}
+      
+        {% if paginate.pages != 0 %}      
+          &#62; Page {{ paginate.current_page }} of {{ paginate.pages }}
+        {% endif %}
+      </div>
+    
+    
+      <div class="four columns section_select">
+        {% if settings.filter_by_category %}
+            <select name="category_filter" id="category_filter">
+              <optgroup label="Select a Collection">
+                <option {% if collection.handle == "all" %}selected="selected"{% endif %} value="/collections/all">All Collections</option>
+            
+                {% for col in collections %}
+                  {% unless col.handle == 'frontpage' %}
+                    <option {% if collection.handle == col.handle %}selected="selected"{% endif %} value="{{ col.url }}">{{ col.title }}</option>
+                  {% endunless %}
+                {% endfor %}
+              </optgroup>
+            </select>
+        {% endif %}
+        &nbsp;
+      </div>
+    
+
+      <div class="four columns section_select omega">
+        {% if settings.collection_tags %}
+          {% for tag in collection.all_tags %}
+            {% if forloop.first %}
+              <select name="tag_filter" id="tag_filter">
+                <optgroup label="Filter {{ collection.title }}">
+                  <option {% unless current_tags %}selected="selected"{% endunless %} value="{{ collection.url }}">All Products</option>
+            {% endif %}          
+          
+            <option {% if current_tags contains tag %}selected="selected"{% endif %} value="/collections/{% if collection.handle != blank %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handleize }}">{{ tag }}</option>
+
+            {% if forloop.last %}
+                </optgroup>
+              </select>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        &nbsp;
+      </div>
+    
+    </div>
+  
+    {% if collection.description != blank %}
+      <div class"section clearfix">
+        <div class="sixteen columns alpha omega feature_text">
+          {{ collection.description }}
+        </div>
+      </div>
+    {% endif %}
+      
+  </div>
+
+
+
+    {% if collection.products.size == 0 %}
+      <p class="quote">No products found in this collection.</p>
+    {% else %}
+      {% assign products = collection.products %}
+      {% assign products_per_row = settings.products_per_row %}
+      {% include 'product-loop' %}
+      {% include 'pagination' %}
+    {% endif %}
+{% endpaginate %}

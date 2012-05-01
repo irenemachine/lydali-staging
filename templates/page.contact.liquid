@@ -1,0 +1,36 @@
+<div class="sixteen columns">
+  <div class="section clearfix">
+    <h1>{{ page.title }}</h1>
+  </div>
+</div>
+
+{% form 'contact' %}
+  {% if form.posted_successfully? %}
+    <p class="quote">Thanks for contacting us! We'll get back to you as soon as possible.</p>
+  {% endif %}
+
+  {% if form.errors %}
+    <p class="quote">Not all the fields have been filled in correctly. Please try again.</p>
+  {% endif %}
+
+  <div class="section clearfix">  
+    <div class="ten columns">
+        {{ page.content }}
+    </div>
+    
+    <div class="five columns offset-by-one">
+
+         <label for="contact_form_name">Name <span class="red">*</span></label>
+         <input type="text" id="contact_form_name" name="contact[name]" value="{{ form.name }}" />
+
+         <label for="contact_form_email">Email <span class="red">*</span></label>
+         <input type="text" id="contact_form_email" name="contact[email]" value="{{ form.email }}"/>
+
+         <label for="contact_message">Message</label>       
+         <textarea id="contact_message" name="contact[question]" rows="5">{{ form.question }}</textarea>
+
+          <input type='submit' class="submit action_button" />
+    </div>
+  </div>  
+{% endform %}
+  
