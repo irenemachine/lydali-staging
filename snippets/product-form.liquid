@@ -25,6 +25,9 @@
     </div>
   {% endif %}
  
+  <label for="quantity">Qty: </label> 
+  <input min="1" type="number" id="quantity" name="quantity" value="1" />
+  <style>#quantity { padding:5px; width:35px; border: 1px solid #555; } </style>
  
   {% if product.available %}
     <div class="purchase clearfix">
