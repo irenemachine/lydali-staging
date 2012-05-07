@@ -1,14 +1,12 @@
 require 'shopify_api'
 
 #These credentials can be found under Manage Apps > Private Apps
-KEY = "f127678300518a83996411f288f1cfcb"
-PASSWORD = "b3e427d64b734e72d06e6dd72404a99c"
-DOMAIN = "irenemachine"
+KEY = "ee78540a20509605a59e61d82be0ae43"
+PASSWORD = "61f08f9eadf0bf7557e6c957f79974cc"
+DOMAIN = "lydali"
 
 #Staging theme ID found using ShopifyAPI::Theme.all
-THEME_ID = "3010780"
-
-
+THEME_ID = "3010764"
 
 watch('.*/.*.liquid') do |match|
   puts "Updating #{match[0].inspect}..."
