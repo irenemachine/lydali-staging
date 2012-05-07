@@ -187,13 +187,13 @@
               <h6 class="social">Social</h6>
 
               {% if settings.twitter_link != '' %}
-        				<a href="{{ settings.twitter_link }}" title="{{ shop.name }} on Twitter" rel="me">
+        				<a href="{{ settings.twitter_link }}" title="{{ shop.name }} on Twitter" rel="me" target="_blank" >
         				  <img src="{{ "twitter.png" | asset_url }}" alt="Twitter" />
         				</a>              
               {% endif %}
               
               {% if settings.facebook_link != '' %}
-        				<a href="{{ settings.facebook_link }}" title="{{ shop.name }} on Facebook" rel="me">
+        				<a href="{{ settings.facebook_link }}" title="{{ shop.name }} on Facebook" rel="me" target="_blank" >
         				  <img src="{{ "facebook.png" | asset_url }}" alt="Facebook" />
         				</a>              
               {% endif %}
