@@ -87,16 +87,9 @@
   <body>
   
     <div class="top_bar">
-      <div class="container">
-        {% if settings.search_box_top_bar %}
-          <div class="eight columns top_bar_search">          
-            <form class="search" action="/search">
-              
-            </form>
-          </div>
-        {% endif %}        
-        
-        <div class="eight columns {% unless settings.search_box_top_bar %} offset-by-eight {% endunless %}">
+      <div class="container top_bar_search">
+
+        <div class="eight columns offset-by-four">
           <ul>
             <li>
               {% if cart.item_count == 0 %}
@@ -115,6 +108,13 @@
             {% endif %}
           </ul>
         </div>
+
+        <div class="three columns">
+          <form class="search" action="/search">
+            <input type="text" name="q" class="search_box" placeholder="Search..." value="{{ search.terms }}" x-webkit-speech />
+          </form>
+        </div>
+
       </div>  
     </div>
   
@@ -176,11 +176,6 @@
     		<div class="sixteen columns">
 
           <div class="four columns alpha offset-by-two">
-            <h6>Search</h6>
-
-            <form class="search" action="/search">
-              <input type="text" name="q" class="search_box" placeholder="Search..." value="{{ search.terms }}" x-webkit-speech />
-            </form>
 
             {% if settings.enable_social_links %}
 
