@@ -3,7 +3,7 @@
   <span class="twittercont"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script></span>
   <span class="plusonecont" style="display:inline-block; width:70px;"><g:plusone size="medium"></g:plusone></span>
 
-  <span class="pinterest" style="display:inline-block;"><a href="http://pinterest.com/pin/create/button/?url={{ product.url }}&media={{ product.featured_image | product_img_url: 'large' | replace:'?','%3F'}}&description={{ product.description | strip_html | truncatewords: 20 | escape }}" class="pin-it-button" count-layout="none"><img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" /></a><script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script></span>
+  <span class="pinterest" style="display:inline-block;"><a href="http://pinterest.com/pin/create/button/?url={{ shop.url }}{{ product.url }}&media={{ product.featured_image | product_img_url: 'large' | replace:'?','%3F'}}&description={{ product.description | strip_html | truncatewords: 20 | escape }}" class="pin-it-button" count-layout="none"><img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" /></a><script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script></span>
 {% endcapture %}
 
 
