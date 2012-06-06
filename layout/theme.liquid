@@ -175,7 +175,7 @@
       <div class="container">
     		<div class="sixteen columns">
 
-          <div class="four columns alpha offset-by-two">
+          <div class="four columns alpha">
 
             {% if settings.enable_social_links %}
 
@@ -192,7 +192,13 @@
         				  <img src="{{ "facebook.png" | asset_url }}" alt="Facebook" />
         				</a>              
               {% endif %}
-              
+
+              {% if settings.pinterest_link != '' %} 
+                <a href="{{ settings.pinterest_link }}" title="{{ shop.name }} on Pinterest" rel="me" target="_blank" >
+        				  <img src="{{ "pinterest.png" | asset_url }}" alt="Pinterest" />
+                </a>
+              {% endif %}
+
               {% if settings.youtube_link != '' %}
         				<a href="{{ settings.youtube_link }}" title="{{ shop.name }} on YouTube" rel="me">
         				  <img src="{{ "youtube.png" | asset_url }}" alt="Facebook" />
@@ -225,7 +231,7 @@
           </div>
 
 
-          <div class="four columns omega">
+          <div class="eight columns omega">
 
             {% if settings.newsletter_enabled %}
               <h6>Newsletter</h6>

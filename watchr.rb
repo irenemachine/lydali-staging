@@ -13,6 +13,11 @@ watch('.*/.*.liquid') do |match|
   upload_template(match.to_s)
 end
 
+watch('config/.*.') do |match|
+  puts "Updating #{match[0].inspect}..."
+  upload_template(match.to_s)
+end
+
 def upload_template(file)
   ShopifyAPI::Base.site = "https://#{KEY}:#{PASSWORD}@#{DOMAIN}.myshopify.com/admin"
   asset = ShopifyAPI::Asset.find(file, :params => {:theme_id => THEME_ID})
